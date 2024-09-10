@@ -5,19 +5,15 @@ import {
   fetchCollection,
 } from '@metaplex-foundation/mpl-core';
 import { base58, base64 } from '@metaplex-foundation/umi/serializers';
-// import { createNoopSigner, createSignerFromKeypair, generateSigner, publicKey, signerIdentity } from '@metaplex-foundation/umi';
 import { createNoopSigner, createSignerFromKeypair, generateSigner, publicKey, signerIdentity } from '@metaplex-foundation/umi';
 import { createSignerFromWalletAdapter, walletAdapterIdentity } from '@metaplex-foundation/umi-signer-wallet-adapters';
 import { assetMetadataUri } from './assetMetadata';
 import { Keypair, PublicKey } from '@solana/web3.js';
 import { walletSecret } from './wallet';
 
-// export async function createAsset(wallet: any) {
-export async function createAsset(user:string) {
+export async function createAsset(user:string,correctAns:number) {
     console.log("Start of createAsset fn : ");
-//   if (!wallet) {
-//     await wallet.connect();
-//   }
+
   // Setup Umi
   const umi = createUmi('https://api.devnet.solana.com', 'confirmed');
   const keypair = umi.eddsa.createKeypairFromSecretKey(
@@ -31,8 +27,12 @@ export async function createAsset(user:string) {
 
   //   umi.use(walletAdapterIdentity(wallet));
 
-  const assetMetadataLink =
-    'https://arweave.net/zzXHoRWMMN09H8KiAK3aUV_FEfhl5uy_pKHiKjHp1vo';
+  const assetMetadataLink = [
+    'https://arweave.net/zzXHoRWMMN09H8KiAK3aUV_FEfhl5uy_pKHiKjHp1vo',
+    'https://arweave.net/LLNB-9iVVi5Ty3fkyiOHz5gBCuRiL2JrInx1LaDTRUQ',
+    'https://arweave.net/jHxiIaUm1J982J7gRNmXP6BnWqK1feW3Ou0-vUvApZU',
+  ];
+  const assetName=['Solana Beginner', 'Solana Skilled', 'Solana Expert']
 
   // Generate the Asset KeyPair
   const asset = generateSigner(umi);
@@ -42,26 +42,10 @@ export async function createAsset(user:string) {
   try {
     const tx = await create(umi, {
       asset,
-      name: 'Solana Blinkk',
-      uri: assetMetadataLink,
+      name: assetName[correctAns-1],
+      uri: assetMetadataLink[correctAns-1],
       authority:adminSigner
-    }).buildAndSign(umi);
-    // }).sendAndConfirm(umi);
-
-    // console.log('tx : ',tx);
-
-    // Deserialize the Signature from the Transaction
-    // console.log(
-    //   'Asset Created: https://solana.fm/tx/' +
-    //     base58.deserialize(tx.signature)[0] +
-    //     '?cluster=devnet-alpha'
-    // );
-
-    // const assetdetails = await fetchAsset(umi, asset.publicKey, {
-    //   skipDerivePlugins: false,
-    // });
-    // console.log('fetched asset details : ', assetdetails);
-    // base64.serialize(tx)
+    }).buildAndSign(umi);    
 
     console.log(Buffer.from(umi.transactions.serialize(tx)).toString("base64"));
     // console.log(umi.transactions.serialize(tx).toString());

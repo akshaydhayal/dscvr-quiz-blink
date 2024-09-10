@@ -24,7 +24,8 @@ export async function GET(request: Request) {
     // icon: 'https://s3.coinmarketcap.com/static-gravity/image/5cc0b99a8dd84fbfa4e150d84b5531f2.png',
     // icon: 'http://localhost:3001/fee3.png',
     icon: new URL(request.url).origin + '/nft2.png',
-    description: `
+    description: `You have to answer mimimum 1 question correctly to get the NFT. Answer 1 question correctly to earn a Beginner NFT, 2 correct answers for a Skilled NFT, and all 3 for an Expert NFT.
+
     Q-1) What is the base transaction fee on Solana?
       a) 1,000 lamports   b) 5,000 lamports  c) 10,000 lamports
 
@@ -48,7 +49,6 @@ export async function GET(request: Request) {
         //   label: 'Option ABC',
         //   href: request.url + '?pg=token',
         // },
-       
 
         // {
         //   label: 'Close Token Program Accounts',
@@ -80,7 +80,6 @@ export async function GET(request: Request) {
             },
           ],
         },
-
       ],
     },
   };
@@ -116,7 +115,7 @@ export async function POST(request: Request) {
   
   let serialisedTx;
   if(correctAns>=1){
-    serialisedTx=await createAsset(reqBody.account);
+    serialisedTx=await createAsset(reqBody.account,correctAns);
   }
   const response: ActionPostResponse = {
     // transaction: Buffer.from(serialisedTx??"").toString("base64"),
