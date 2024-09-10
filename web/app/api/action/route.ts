@@ -21,9 +21,9 @@ import { useWallet } from '@solana/wallet-adapter-react';
 export async function GET(request: Request) {
   const response: ActionGetResponse = {
     title: 'Play this Quiz and Earn a Solana NFT',
-    icon: 'https://s3.coinmarketcap.com/static-gravity/image/5cc0b99a8dd84fbfa4e150d84b5531f2.png',
+    // icon: 'https://s3.coinmarketcap.com/static-gravity/image/5cc0b99a8dd84fbfa4e150d84b5531f2.png',
     // icon: 'http://localhost:3001/fee3.png',
-    // icon: new URL(request.url).origin + '/fee5.png',
+    icon: new URL(request.url).origin + '/nft2.png',
     description: `
     Q-1) What is the base transaction fee on Solana?
       a) 1,000 lamports   b) 5,000 lamports  c) 10,000 lamports
