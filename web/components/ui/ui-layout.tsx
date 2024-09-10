@@ -29,7 +29,8 @@ export function UiLayout({
       <div className="navbar bg-base-300 text-neutral-content flex-col md:flex-row space-y-2 md:space-y-0">
         <div className="flex-1">
           <Link className="btn btn-ghost normal-case text-xl" href="/">
-            <img className="h-4 md:h-6" alt="Logo" src="/logo.png" />
+            {/* <img className="h-4 md:h-6" alt="Logo" src="/logo.png" /> */}
+            <p className="font-semibold text-3xl text-slate-300">Blinks Quiz</p>
           </Link>
           <ul className="menu menu-horizontal px-1 space-x-2">
             {links.map(({ label, path }) => (
