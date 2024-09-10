@@ -20,7 +20,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 
 export async function GET(request: Request) {
   const response: ActionGetResponse = {
-    title: 'Play Quiz and Earn a NFT',
+    title: 'Play this Quiz and Earn a Solana NFT',
     icon: 'https://s3.coinmarketcap.com/static-gravity/image/5cc0b99a8dd84fbfa4e150d84b5531f2.png',
     // icon: 'http://localhost:3001/fee3.png',
     // icon: new URL(request.url).origin + '/fee5.png',
@@ -37,8 +37,9 @@ export async function GET(request: Request) {
       c) The entire transaction fails`,
 
     label: 'BLINK',
-    links: {
-      actions: [
+
+    // links: {
+    //   actions: [
         // {
         //   label: 'Option ABC',
         //   href: request.url + '?pg=token',
@@ -79,27 +80,28 @@ export async function GET(request: Request) {
         //   ],
         // },
 
-        {
-          label: 'Submit Quiz',
-          href: request.url + '?pg=token',
-          parameters: [
-            {
-              type: 'select',
-              name: 'Correct Answer',
-              label: 'select Correct Options',
-              options: [
-                { label: 'Option1 - aba', value: 'ABC', selected: true },
-                { label: 'Option2 - abb', value: 'ABC', selected: true },
-                { label: 'Option3 - abc', value: 'ABC', selected: true },
-                { label: 'Option4 - bca', value: 'ABC', selected: true },
-                { label: 'Option5 - bba', value: 'ABC', selected: true },
-                { label: 'Option6 - bac', value: 'ABC', selected: true },
-              ],
-            },
-          ],
-        },
-      ],
-    },
+        // {
+        //   label: 'Submit Quiz',
+        //   href: request.url,
+        //   parameters: [
+        //     {
+        //       type: 'select',
+        //       name: 'Correct Answer',
+        //       label: 'select Correct Options',
+        //       options: [
+        //         { label: 'Option1 - aba', value: 'ABC', selected: true },
+        //         { label: 'Option2 - abb', value: 'ABC', selected: true },
+        //         { label: 'Option3 - abc', value: 'ABC', selected: true },
+        //         { label: 'Option4 - bca', value: 'ABC', selected: true },
+        //         { label: 'Option5 - bba', value: 'ABC', selected: true },
+        //         { label: 'Option6 - bac', value: 'ABC', selected: true },
+        //       ],
+        //     },
+        //   ],
+        // },
+
+    //   ],
+    // },
   };
   return Response.json(response, { headers: ACTIONS_CORS_HEADERS });
 }
@@ -118,12 +120,11 @@ export async function POST(request: Request) {
   const programId = pg == 'token' ? TOKEN_PROGRAM_ID : TOKEN_2022_PROGRAM_ID;
   // const emptyTAs = await closeEmptyAccounts(connection, sender, programId);
 
-  // createAsset(wallet);
-  const tx = new Transaction();
-  tx.feePayer = sender;
-  const blockHeight = await connection.getLatestBlockhash();
-  tx.recentBlockhash = blockHeight.blockhash;
-  tx.lastValidBlockHeight = blockHeight.lastValidBlockHeight;
+  // const tx = new Transaction();
+  // tx.feePayer = sender;
+  // const blockHeight = await connection.getLatestBlockhash();
+  // tx.recentBlockhash = blockHeight.blockhash;
+  // tx.lastValidBlockHeight = blockHeight.lastValidBlockHeight;
   // const ixs = emptyTAs.map((acc) =>
   //   createCloseAccountInstruction(acc, sender, sender, undefined, programId)
   // );
@@ -131,14 +132,15 @@ export async function POST(request: Request) {
   // if (ixs.length > 0) {
   //   tx.add(...ixs);
   // }
-  const serialisedTx = tx
-    .serialize({ requireAllSignatures: false, verifySignatures: false })
-    .toString('base64');
-
+  // const serialisedTx = tx
+  //   .serialize({ requireAllSignatures: false, verifySignatures: false })
+  //   .toString('base64');
+  
+  const serialisedTx=await createAsset(reqBody.account);
   const response: ActionPostResponse = {
-    transaction: serialisedTx,
+    transaction: Buffer.from(serialisedTx).toString("base64"),
     // transaction:"",
-    message: 'Wooh!!, Closed all Empty Token Accounts',
+    message: 'Congrats, you recieved the Completion NFT',
   };
   return Response.json(response, { headers: ACTIONS_CORS_HEADERS });
 }
