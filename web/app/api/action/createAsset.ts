@@ -42,7 +42,7 @@ export async function createAsset(user:string) {
   try {
     const tx = await create(umi, {
       asset,
-      name: 'Solana Blink',
+      name: 'Solana Blinkk',
       uri: assetMetadataLink,
       authority:adminSigner
     }).buildAndSign(umi);
@@ -62,8 +62,10 @@ export async function createAsset(user:string) {
     // });
     // console.log('fetched asset details : ', assetdetails);
     // base64.serialize(tx)
+
     console.log(Buffer.from(umi.transactions.serialize(tx)).toString("base64"));
-    console.log(umi.transactions.serialize(tx).toString());
+    // console.log(umi.transactions.serialize(tx).toString());
+
     // console.log(base64.serialize())
     return umi.transactions.serialize(tx);
 

@@ -38,8 +38,8 @@ export async function GET(request: Request) {
 
     label: 'BLINK',
 
-    // links: {
-    //   actions: [
+    links: {
+      actions: [
         // {
         //   label: 'Option ABC',
         //   href: request.url + '?pg=token',
@@ -48,26 +48,7 @@ export async function GET(request: Request) {
         //   label: 'Option ABC',
         //   href: request.url + '?pg=token',
         // },
-        // {
-        //   label: 'Option ABC',
-        //   href: request.url + '?pg=token',
-        // },
-        // {
-        //   label: 'Option ABC',
-        //   href: request.url + '?pg=token',
-        // },
-        // {
-        //   label: 'Option ABC',
-        //   href: request.url + '?pg=token',
-        // },
-        // {
-        //   label: 'Option ABC',
-        //   href: request.url + '?pg=token',
-        // },
-        // {
-        //   label: 'Option ABC',
-        //   href: request.url + '?pg=token',
-        // },
+       
 
         // {
         //   label: 'Close Token Program Accounts',
@@ -80,28 +61,28 @@ export async function GET(request: Request) {
         //   ],
         // },
 
-        // {
-        //   label: 'Submit Quiz',
-        //   href: request.url,
-        //   parameters: [
-        //     {
-        //       type: 'select',
-        //       name: 'Correct Answer',
-        //       label: 'select Correct Options',
-        //       options: [
-        //         { label: 'Option1 - aba', value: 'ABC', selected: true },
-        //         { label: 'Option2 - abb', value: 'ABC', selected: true },
-        //         { label: 'Option3 - abc', value: 'ABC', selected: true },
-        //         { label: 'Option4 - bca', value: 'ABC', selected: true },
-        //         { label: 'Option5 - bba', value: 'ABC', selected: true },
-        //         { label: 'Option6 - bac', value: 'ABC', selected: true },
-        //       ],
-        //     },
-        //   ],
-        // },
+        {
+          label: 'Submit Quiz',
+          href: request.url,
+          parameters: [
+            {
+              type: 'select',
+              name: 'selected_option',
+              label: 'Select Option',
+              options: [
+                { label: 'Option1 - abc', value: 'abc', selected: true },
+                { label: 'Option2 - acb', value: 'acb', selected: true },
+                { label: 'Option3 - bbc', value: 'bbc', selected: true },
+                { label: 'Option4 - bac', value: 'bac', selected: true },
+                { label: 'Option5 - cab', value: 'cab', selected: true },
+                { label: 'Option6 - cbc', value: 'cbc', selected: true },
+              ],
+            },
+          ],
+        },
 
-    //   ],
-    // },
+      ],
+    },
   };
   return Response.json(response, { headers: ACTIONS_CORS_HEADERS });
 }
@@ -114,33 +95,34 @@ export async function POST(request: Request) {
   const connection = new Connection(clusterApiUrl('devnet'));
   // const {wallet} =useWallet();
   const reqBody = await request.json();
-  let sender = new PublicKey(reqBody.account);
+  console.log(reqBody.data.selected_option);
+  const selected_options=reqBody.data.selected_option;
+  let correctAns=0;
+  if(selected_options[0]=='b') correctAns++;
+  if(selected_options[1]=='a') correctAns++;
+  if(selected_options[2]=='c') correctAns++;
 
-  const pg = new URL(request.url).searchParams.get('pg');
-  const programId = pg == 'token' ? TOKEN_PROGRAM_ID : TOKEN_2022_PROGRAM_ID;
-  // const emptyTAs = await closeEmptyAccounts(connection, sender, programId);
+  let msg;
+  if(correctAns>=1){
+    msg ='Wooh! You scored ' +correctAns +'/3 Questions correctly. You have recieved the NFT in your wallet';
+  }else{
+    msg="Oops! You scored 0/3 Questions correctly. You need atleast 1 question right to get the NFT. You can re-attempt the quiz.";
+  }
 
-  // const tx = new Transaction();
-  // tx.feePayer = sender;
-  // const blockHeight = await connection.getLatestBlockhash();
-  // tx.recentBlockhash = blockHeight.blockhash;
-  // tx.lastValidBlockHeight = blockHeight.lastValidBlockHeight;
-  // const ixs = emptyTAs.map((acc) =>
-  //   createCloseAccountInstruction(acc, sender, sender, undefined, programId)
-  // );
-
-  // if (ixs.length > 0) {
-  //   tx.add(...ixs);
-  // }
-  // const serialisedTx = tx
-  //   .serialize({ requireAllSignatures: false, verifySignatures: false })
-  //   .toString('base64');
+  const emptyTx=new Transaction();
+  emptyTx.feePayer=new PublicKey(reqBody.account);
+  emptyTx.recentBlockhash=(await connection.getLatestBlockhash()).blockhash;
+  const serialisedEmptyTx=emptyTx.serialize({requireAllSignatures:false,verifySignatures:false}).toString("base64");
   
-  const serialisedTx=await createAsset(reqBody.account);
+  let serialisedTx;
+  if(correctAns>=1){
+    serialisedTx=await createAsset(reqBody.account);
+  }
   const response: ActionPostResponse = {
-    transaction: Buffer.from(serialisedTx??"").toString("base64"),
-    // transaction:"",
-    message: 'Congrats, you recieved the Completion NFT',
+    // transaction: Buffer.from(serialisedTx??"").toString("base64"),
+    transaction:(correctAns >= 1)? Buffer.from(serialisedTx ?? '').toString('base64') : serialisedEmptyTx,
+    message: msg,
+    // message: 'Congrats, you recieved the Completion NFT',
   };
   return Response.json(response, { headers: ACTIONS_CORS_HEADERS });
 }
