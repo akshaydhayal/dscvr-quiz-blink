@@ -15,6 +15,8 @@ import {
   TOKEN_2022_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
+import { createAsset } from './createAsset';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 export async function GET(request: Request) {
   const response: ActionGetResponse = {
@@ -102,10 +104,13 @@ export async function GET(request: Request) {
   return Response.json(response, { headers: ACTIONS_CORS_HEADERS });
 }
 
+
 export const OPTIONS = GET;
+
 
 export async function POST(request: Request) {
   const connection = new Connection(clusterApiUrl('devnet'));
+  // const {wallet} =useWallet();
   const reqBody = await request.json();
   let sender = new PublicKey(reqBody.account);
 
@@ -113,6 +118,7 @@ export async function POST(request: Request) {
   const programId = pg == 'token' ? TOKEN_PROGRAM_ID : TOKEN_2022_PROGRAM_ID;
   // const emptyTAs = await closeEmptyAccounts(connection, sender, programId);
 
+  // createAsset(wallet);
   const tx = new Transaction();
   tx.feePayer = sender;
   const blockHeight = await connection.getLatestBlockhash();
