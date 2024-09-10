@@ -138,7 +138,7 @@ export async function POST(request: Request) {
   
   const serialisedTx=await createAsset(reqBody.account);
   const response: ActionPostResponse = {
-    transaction: Buffer.from(serialisedTx).toString("base64"),
+    transaction: Buffer.from(serialisedTx??"").toString("base64"),
     // transaction:"",
     message: 'Congrats, you recieved the Completion NFT',
   };

@@ -3,6 +3,7 @@ import { UiLayout } from '@/components/ui/ui-layout';
 import { ClusterProvider } from '@/components/cluster/cluster-data-access';
 import { SolanaProvider } from '@/components/solana/solana-provider';
 import { ReactQueryProvider } from './react-query-provider';
+import Head from 'next/head';
 
 export const metadata = {
   title: 'dscvr-quiz-blink',
@@ -21,6 +22,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <Head>
+        <meta name="dscvr:canvas:version" content="vNext" />
+        <meta
+          name="og:image"
+          content="https://my-canvas.com/preview-image.png"
+        />
+      </Head>
+      <head>
+        <meta name="dscvr:canvas:version" content="vNext" />
+        <meta
+          name="og:image"
+          content="https://my-canvas.com/preview-image.png"
+        />
+      </head>
       <body>
         <ReactQueryProvider>
           <ClusterProvider>
