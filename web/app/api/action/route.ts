@@ -41,14 +41,30 @@ export async function GET(request: Request) {
 
     links: {
       actions: [
-        // {
-        //   label: 'Option ABC',
-        //   href: request.url + '?pg=token',
-        // },
-        // {
-        //   label: 'Option ABC',
-        //   href: request.url + '?pg=token',
-        // },
+        {
+          label: 'Option abc',
+          href: request.url + '?selected_option=abc',
+        },
+        {
+          label: 'Option acb',
+          href: request.url + '?selected_option=acb',
+        },
+        {
+          label: 'Option bbc',
+          href: request.url + '?selected_option=bbc',
+        },
+        {
+          label: 'Option bac',
+          href: request.url + '?selected_option=bac',
+        },
+        {
+          label: 'Option cab',
+          href: request.url + '?selected_option=cab',
+        },
+        {
+          label: 'Option cbc',
+          href: request.url + '?selected_option=cbc',
+        },
 
         // {
         //   label: 'Close Token Program Accounts',
@@ -61,25 +77,25 @@ export async function GET(request: Request) {
         //   ],
         // },
 
-        {
-          label: 'Submit Quiz',
-          href: request.url,
-          parameters: [
-            {
-              type: 'select',
-              name: 'selected_option',
-              label: 'Select Option',
-              options: [
-                { label: 'Option1 - abc', value: 'abc', selected: true },
-                { label: 'Option2 - acb', value: 'acb', selected: true },
-                { label: 'Option3 - bbc', value: 'bbc', selected: true },
-                { label: 'Option4 - bac', value: 'bac', selected: true },
-                { label: 'Option5 - cab', value: 'cab', selected: true },
-                { label: 'Option6 - cbc', value: 'cbc', selected: true },
-              ],
-            },
-          ],
-        },
+        // {
+        //   label: 'Submit Quiz',
+        //   href: request.url,
+        //   parameters: [
+        //     {
+        //       type: 'select',
+        //       name: 'selected_option',
+        //       label: 'Select Option',
+        //       options: [
+        //         { label: 'Option1 - abc', value: 'abc', selected: true },
+        //         { label: 'Option2 - acb', value: 'acb', selected: true },
+        //         { label: 'Option3 - bbc', value: 'bbc', selected: true },
+        //         { label: 'Option4 - bac', value: 'bac', selected: true },
+        //         { label: 'Option5 - cab', value: 'cab', selected: true },
+        //         { label: 'Option6 - cbc', value: 'cbc', selected: true },
+        //       ],
+        //     },
+        //   ],
+        // },
       ],
     },
   };
@@ -94,8 +110,13 @@ export async function POST(request: Request) {
   const connection = new Connection(clusterApiUrl('devnet'));
   // const {wallet} =useWallet();
   const reqBody = await request.json();
-  console.log(reqBody.data.selected_option);
-  const selected_options=reqBody.data.selected_option;
+  console.log(reqBody);
+  const selected_options=new URL(request.url).searchParams.get('selected_option');
+  console.log(selected_options);
+  console.log(typeof(selected_options));
+  // console.log(reqBody.data.selected_option);
+
+  // const selected_options=reqBody.data.selected_option;
   let correctAns=0;
   if(selected_options[0]=='b') correctAns++;
   if(selected_options[1]=='a') correctAns++;
