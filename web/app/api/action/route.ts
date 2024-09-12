@@ -118,9 +118,11 @@ export async function POST(request: Request) {
 
   // const selected_options=reqBody.data.selected_option;
   let correctAns=0;
-  if(selected_options[0]=='b') correctAns++;
-  if(selected_options[1]=='a') correctAns++;
-  if(selected_options[2]=='c') correctAns++;
+  if(selected_options){
+    if(selected_options[0]=='b') correctAns++;
+    if(selected_options[1]=='a') correctAns++;
+    if(selected_options[2]=='c') correctAns++;
+  }
 
   let msg;
   if(correctAns>=1){
